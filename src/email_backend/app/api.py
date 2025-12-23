@@ -1,5 +1,6 @@
-
-
+"""
+主函数
+"""
 from fastapi import FastAPI
 
 from src.email_backend.config.config import Settings
