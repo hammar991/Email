@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 
 router = APIRouter(
-    prefix="/",
+    prefix="/user",
     tags=["登录注册接口"]
 )
 
