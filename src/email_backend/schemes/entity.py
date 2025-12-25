@@ -11,7 +11,7 @@ class User(SQLModel, table=True):
     """用户表"""
     __tablename__ = "user"
     id: int = Field(default=Integer, index=True, primary_key=True)
-    name: str = Field(default=None, max_length=255)
+    name: str = Field(default=None, max_length=255, unique=True)
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     password: str = Field(default=None, min_length=8, max_length=255)
 
