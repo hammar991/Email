@@ -4,7 +4,7 @@
 from fastapi import FastAPI
 import uvicorn
 
-from src.email_backend.config.config import settings
+from src.email_backend.core.config import settings
 from src.email_backend.app.api_router import api_router
 
 
