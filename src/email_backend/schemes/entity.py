@@ -1,5 +1,5 @@
 """
-数据层：数据库orm操作
+数据层：sqlmodel模型
 """
 from sqlmodel import SQLModel, Field
 from pydantic import EmailStr
