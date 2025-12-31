@@ -4,9 +4,14 @@
 from pydantic import BaseModel, EmailStr
 
 
-class UserRegister(BaseModel):
+class RegisterMsg(BaseModel):
     name: str
     email: EmailStr
+    password: str
+
+
+class LoginMsg(BaseModel):
+    name: str
     password: str
 
 
