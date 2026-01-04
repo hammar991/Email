@@ -1,6 +1,7 @@
 """
 数据层：sqlmodel模型
 """
+import uuid
 from sqlmodel import SQLModel, Field
 from pydantic import EmailStr
 from typing import Optional

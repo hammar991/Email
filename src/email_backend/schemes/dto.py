@@ -15,5 +15,15 @@ class LoginMsg(BaseModel):
     password: str
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class UserInfo(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+
+
 class MessageInfo(BaseModel):
     context: str
