@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     # jwt访问令牌
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30       # 访问令牌过期时间
     ALGORITHM: str = "HS256"  # 算法
+    SECRET_KEY: str = "56f060e77af06f79b96dec1f5c4332cdc803b181354c4a40060502b7bc589fc4"
 
     # 数据库
     DATABASE_URL: str = "sqlite:///C:/Users/user/Desktop/email/src/email_backend/schemes/database.db"

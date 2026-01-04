@@ -60,3 +60,8 @@ def get_secret_key():
     :return:
     """
     return secrets.token_hex(32)
+
+
+if __name__ == "__main__":
+    a = get_secret_key()
+    print(a)
