@@ -9,9 +9,11 @@ from src.email_backend.app.api_router import api_router
 
 
 app = FastAPI(
+    name=settings.PROJECT_NAME,
     title=settings.TITLE,
     version=settings.VERSION,
-    root_path=settings.API_V1_STR
+    root_path=settings.API_V1_STR,
+    description=settings.DESCRIPTION,
 )
 
 
