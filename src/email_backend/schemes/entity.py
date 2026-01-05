@@ -21,7 +21,7 @@ class Mailbox(SQLModel, table=True):
     __tablename__ = "mailbox"
     id: Optional[int] = Field(default=None, index=True, primary_key=True)
     box_name: str
-    user_id: int = Field(foreign_key="user.id")
+    user_id: int = Field(default=None, foreign_key="user.id")
 
 
 class Message(SQLModel, table=True):
@@ -35,3 +35,14 @@ class Message(SQLModel, table=True):
 def init_db(engine):
     """创建所有数据库表"""
     SQLModel.metadata.create_all(engine)
+
+
+
+if __name__ == '__main__':
+    from src.email_backend.core.config import settings
+    from sqlmodel import create_engine
+    engine = create_engine(url=settings.DATABASE_URL, echo=True)
+    print(engine)
+    SQLModel.metadata.create_all(engine)
+
+

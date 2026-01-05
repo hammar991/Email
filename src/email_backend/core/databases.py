@@ -6,14 +6,13 @@ from loguru import logger
 from contextlib import contextmanager
 
 from src.email_backend.core.config import settings
-from src.email_backend.schemes.entity import init_db
+
 
 
 # 创建数据库引擎
 engine = create_engine(url=settings.DATABASE_URL, echo=True)
+logger.info(f'创建数据库引擎：{engine}')
 
-# 数据库初始化
-init_db(engine)
 
 """上下文管理器"""
 @contextmanager

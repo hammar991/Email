@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "56f060e77af06f79b96dec1f5c4332cdc803b181354c4a40060502b7bc589fc4"
 
     # 数据库
-    DATABASE_URL: str = "sqlite:///C:/Users/user/Desktop/email/src/email_backend/schemes/database.db"
+    DATABASE_URL: str = "sqlite:///../schemes/database.db"
 
     # 静态资源目录
     STATIC_DIR: str = os.path.join(os.getcwd(), "../static")
