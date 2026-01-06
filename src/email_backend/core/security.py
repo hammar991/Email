@@ -6,6 +6,7 @@ from pwdlib import PasswordHash
 from datetime import timedelta, datetime, timezone
 
 import jwt
+from loguru import logger
 
 from src.email_backend.core.config import settings
 
@@ -13,7 +14,7 @@ from src.email_backend.core.config import settings
 password_hash = PasswordHash.recommended()
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: int | None = None):
     """
     创建token访问令牌
     :param data: 包含用户信息字典
@@ -25,7 +26,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
     # 2. 设置过期时间
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = datetime.now(timezone.utc) + timedelta(minutes=expires_delta)
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=30)
 
@@ -43,7 +44,7 @@ def get_password_hash(password: str):
     """
     return password_hash.hash(password)
 
-
+@logger.catch()
 def verify_password(plain_password, hashed_password):
     """
     验证密码是否匹配
@@ -51,6 +52,7 @@ def verify_password(plain_password, hashed_password):
     :param hashed_password:
     :return:
     """
+    logger.debug(f"plain_password:{plain_password}, hashed_password: {hashed_password}")
     return password_hash.verify(plain_password, hashed_password)
 
 

@@ -12,7 +12,7 @@ class User(SQLModel, table=True):
     __tablename__ = "user"
     id: Optional[int] = Field(default=None, index=True, primary_key=True)
     name: str = Field(default=None, max_length=255, unique=True)
-    email: EmailStr = Field(unique=True, index=True, max_length=255)
+    email: EmailStr = Field(default=None,unique=True, index=True, max_length=255)
     password: str = Field(default=None, min_length=8, max_length=255)
 
 
@@ -35,7 +35,6 @@ class Message(SQLModel, table=True):
 def init_db(engine):
     """创建所有数据库表"""
     SQLModel.metadata.create_all(engine)
-
 
 
 if __name__ == '__main__':
