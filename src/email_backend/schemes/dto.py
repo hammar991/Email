@@ -12,6 +12,7 @@ class RegisterMsg(BaseModel):
 
 
 class RegisterResponse(BaseModel):
+    """注册响应"""
     status_code: int
     name: str
     detail: str
@@ -42,3 +43,9 @@ class SuccessfulResponse(BaseModel, JSONResponse):
     message: str
     code: int
     detail: str
+
+
+class CredentialResponse(BaseModel, JSONResponse):
+    """验证失败响应"""
+    status_code: int = 401
+    detail:str = "无法验证凭证!"
