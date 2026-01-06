@@ -10,6 +10,7 @@ class RegisterMsg(BaseModel):
     email: EmailStr
     password: str
 
+
 class RegisterResponse(BaseModel):
     status_code: int
     name: str
