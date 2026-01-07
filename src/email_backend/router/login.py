@@ -4,10 +4,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import (
-    OAuth2PasswordBearer,
-    OAuth2PasswordRequestForm
-)
+from fastapi.security import OAuth2PasswordRequestForm
 from loguru import logger
 
 from src.email_backend.core.config import settings
@@ -20,9 +17,6 @@ router = APIRouter(
     prefix="/user",
     tags=["登录注册接口"]
 )
-
-# 查找包含Bearer令牌的Authorization头(www-Authorization 响应头); 未找到返回 401 error
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/user/login/access-token")
 
 
 @logger.catch()
@@ -67,3 +61,16 @@ def register_user(user_data: RegisterMsg):
             status_code=200,
             detail="创建成功！"
         )
+
+
+@router.post("/login/reset")
+def reset_password(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    重置密码
+    :param form_data:
+    :return:
+    """
+    with get_db_session() as session:
+        user_service = UserServices(session=session)
+
+

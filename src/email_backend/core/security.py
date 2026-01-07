@@ -5,19 +5,23 @@ import secrets
 from pwdlib import PasswordHash
 from datetime import timedelta, datetime, timezone
 from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import select
 from typing import Annotated
+
 
 import jwt, jose
 from loguru import logger
 
 from src.email_backend.core.config import settings
-from src.email_backend.router.login import oauth2_scheme
 from src.email_backend.schemes.entity import User
 from src.email_backend.schemes.dto import CredentialResponse
 
 # 密码哈希算法
 password_hash = PasswordHash.recommended()
+
+# 查找包含Bearer令牌的Authorization头(www-Authorization 响应头); 未找到返回 401 error
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/user/login/access-token")
 
 
 def create_access_token(data: dict, expires_delta: int | None = None):

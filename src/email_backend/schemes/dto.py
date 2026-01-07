@@ -28,6 +28,13 @@ class Token(BaseModel):
     token_type: str
 
 
+class UserResetMsg(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    ensure_password: str
+
+
 class UserInfo(BaseModel):
     id: int
     name: str

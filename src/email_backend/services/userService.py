@@ -10,10 +10,10 @@ from typing import Annotated
 
 from src.email_backend.core.security import get_password_hash
 from src.email_backend.core.config import settings
-from src.email_backend.schemes.dto import RegisterMsg, CredentialResponse
+from src.email_backend.schemes.dto import RegisterMsg, CredentialResponse, UserResetMsg
 from src.email_backend.schemes.entity import User
 from src.email_backend.services.serviceBase import ServiceBase
-from src.email_backend.router.login import oauth2_scheme
+from src.email_backend.core.security import oauth2_scheme
 
 
 class UserServices(ServiceBase):
@@ -46,8 +46,28 @@ class UserServices(ServiceBase):
         self._s.add(statement2)
         return True
 
-    def modify_password(self):
-        pass
+    def reset_password(self, form_data: UserResetMsg):
+        """
+        重置密码
+        :return:
+        """
+        statement = select(User).where(User.name == form_data.name and User.email == form_data.email)
+        resp = self._s.exec(statement).one()
+
+        if not resp:
+            raise HTTPException(
+                status_code=404,
+                detail="未找到数据！请检查用户名和邮箱！！"
+            )
+
+        if not UserResetMsg.password == UserResetMsg.ensure_password:
+            raise HTTPException(
+                status_code=404,
+                detail="确认密码和重置密码不一致，请重新输入！"
+            )
+
+        # 更新密码
+
 
     @logger.catch()
     def authenticate_user(self, username: str, password: str):
