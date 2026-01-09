@@ -3,6 +3,7 @@
 """
 
 from fastapi import APIRouter, Depends
+from loguru import logger
 
 from src.email_backend.services.mailboxService import MailboxService
 from src.email_backend.services.userService import UserServices
@@ -24,9 +25,10 @@ def get_mailbox(current_user: User = Depends(get_current_user)):
     :return:
     """
     with get_db_session() as session:
-        mailbox_service = MailboxService(session)
+        logger.debug(current_user)
+        mailbox_service = MailboxService(session=session)
         resp = mailbox_service.get_mailbox_by_user_id(current_user.id)
-        print(resp)
+        return resp
 
 
 @router.post("/create_mailbox")

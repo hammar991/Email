@@ -16,6 +16,7 @@ from loguru import logger
 from src.email_backend.core.config import settings
 from src.email_backend.schemes.entity import User
 from src.email_backend.schemes.dto import CredentialResponse
+from src.email_backend.core.databases import get_db_session
 
 # 密码哈希算法
 password_hash = PasswordHash.recommended()
@@ -74,7 +75,7 @@ def get_secret_key():
     return secrets.token_hex(32)
 
 
-def get_current_user(self, token: Annotated[str, Depends(oauth2_scheme)]):
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     """
     拿到当前用户
     :return:
@@ -88,7 +89,8 @@ def get_current_user(self, token: Annotated[str, Depends(oauth2_scheme)]):
         raise CredentialResponse
 
     # 验证用户是否存在
-    user = self._s.exec(select(User).where(User.name == username)).one()
+    with get_db_session() as session:
+        user = session.exec(select(User).where(User.name == username)).one()
     if not user:
         raise CredentialResponse
     return user
