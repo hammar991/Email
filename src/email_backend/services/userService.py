@@ -46,12 +46,12 @@ class UserServices(ServiceBase):
         self._s.add(statement2)
         return True
 
-    def reset_password(self, form_data: UserResetMsg):
+    def reset_password(self, data: UserResetMsg):
         """
         重置密码
         :return:
         """
-        statement = select(User).where(User.name == form_data.name and User.email == form_data.email)
+        statement = select(User).where(User.name == data.name and User.email == data.email)
         resp = self._s.exec(statement).one()
 
         if not resp:
@@ -60,13 +60,17 @@ class UserServices(ServiceBase):
                 detail="未找到数据！请检查用户名和邮箱！！"
             )
 
-        if not UserResetMsg.password == UserResetMsg.ensure_password:
+        if not data.password == data.ensure_password:
             raise HTTPException(
                 status_code=404,
                 detail="确认密码和重置密码不一致，请重新输入！"
             )
 
         # 更新密码
+        resp.password =data.password
+        # 添加到会话
+        self._s.add(resp)
+        return True
 
 
     @logger.catch()

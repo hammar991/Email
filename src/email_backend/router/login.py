@@ -10,7 +10,7 @@ from loguru import logger
 from src.email_backend.core.config import settings
 from src.email_backend.core.databases import get_db_session
 from src.email_backend.core.security import verify_password, create_access_token
-from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse
+from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg
 from src.email_backend.services.userService import UserServices
 
 router = APIRouter(
@@ -64,7 +64,7 @@ def register_user(user_data: RegisterMsg):
 
 
 @router.post("/login/reset")
-def reset_password(form_data: OAuth2PasswordRequestForm = Depends()):
+def reset_password(form_data: UserResetMsg):
     """
     重置密码
     :param form_data:
@@ -72,5 +72,13 @@ def reset_password(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     with get_db_session() as session:
         user_service = UserServices(session=session)
+        resp = user_service.reset_password(data=form_data)
 
+        if not resp:
+            raise HTTPException(
+                status_code=404,
+                detail="更新数据失败！请再试一次!"
+            )
+
+        return {"detail": "更新成功！"}
 
