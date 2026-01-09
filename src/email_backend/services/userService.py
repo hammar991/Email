@@ -67,7 +67,8 @@ class UserServices(ServiceBase):
             )
 
         # 更新密码
-        resp.password =data.password
+        resp.password = get_password_hash(data.password)
+
         # 添加到会话
         self._s.add(resp)
         return True

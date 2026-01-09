@@ -33,6 +33,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
                 headers={"WWW-Authenticate": "Bearer"},
             )
         res = verify_password(form_data.password, user.password)
+
         if not res:
             raise HTTPException(status_code=401, detail="error！密码错误！")
 
