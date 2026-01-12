@@ -3,5 +3,3 @@
 """
 
 
-class UserServices():
-    pass
