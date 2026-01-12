@@ -6,7 +6,7 @@ from pwdlib import PasswordHash
 from datetime import timedelta, datetime, timezone
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from sqlmodel import select
+from sqlmodel import select, Session
 from typing import Annotated
 
 
@@ -23,6 +23,8 @@ password_hash = PasswordHash.recommended()
 
 # 查找包含Bearer令牌的Authorization头(www-Authorization 响应头); 未找到返回 401 error
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/user/login/access-token")
+
+SessionDep = Annotated[Session, Depends(get_db_session)]
 
 
 def create_access_token(data: dict, expires_delta: int | None = None):
@@ -75,22 +77,22 @@ def get_secret_key():
     return secrets.token_hex(32)
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+def get_current_user(session : SessionDep, token: Annotated[str, Depends(oauth2_scheme)]):
     """
     拿到当前用户
     :return:
     """
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
+        payload = jwt.decode(token, settings.SECRET_KEY, algoriyhms=settings.ALGORITHM)
         username: str = payload.get("sub")
+        logger.debug(f"username:{username}")
         if username is None:
             raise CredentialResponse
     except jose.JWTError:
         raise CredentialResponse
 
     # 验证用户是否存在
-    with get_db_session() as session:
-        user = session.exec(select(User).where(User.name == username)).one()
+    user = session.get(User, username)
     if not user:
         raise CredentialResponse
     return user

@@ -10,7 +10,7 @@ from src.email_backend.core.config import settings
 
 
 # 创建数据库引擎
-engine = create_engine(url=settings.DATABASE_URL, echo=True)
+engine = create_engine(url=settings.DATABASE_URL, echo=False, pool_size=settings.POOL_SIZE, max_overflow=settings.MAX_OVERFLOW)
 logger.info(f'创建数据库引擎：{engine}')
 
 

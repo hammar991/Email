@@ -21,6 +21,8 @@ class Settings(BaseSettings):
 
     # 数据库
     DATABASE_URL: str = "sqlite:///../schemes/database.db"
+    POOL_SIZE: int =  256       # 连接池中保持打开的连接数量
+    MAX_OVERFLOW: int = 0       # 设置连接池允许超出 pool_size 限制的最大连接数
 
     # 静态资源目录
     STATIC_DIR: str = os.path.join(os.getcwd(), "../static")
