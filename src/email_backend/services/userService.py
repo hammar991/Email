@@ -81,6 +81,20 @@ class UserServices(ServiceBase):
         statement = select(User).where(User.name == username)
         resp: User | None = self._s.exec(statement).one()  # 确保仅 能查找到一行数据,
         if not resp:
-            return False
+            raise HTTPException(
+                status_code=404,
+                detail="error！该用户不存在！",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
-        return verify_password_hash(resp.password, password)
+        return verify_password_hash(password,resp.password)
+
+    def get_user_by_name(self, name: str) -> User | None:
+        """
+        按照名字查找
+        """
+        statement = select(User).where(User.name == name)
+        resp = self._s.exec(statement).one()
+        if not resp:
+            return None
+        return resp

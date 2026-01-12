@@ -7,10 +7,10 @@ from loguru import logger
 from sqlmodel import Session
 
 from src.email_backend.services.mailboxService import MailboxService
-
+from src.email_backend.services.userService import UserServices
 from src.email_backend.core.databases import get_db_session
 from src.email_backend.schemes.entity import User
-from src.email_backend.core.security import get_current_user
+from src.email_backend.core.security import get_current_user_name
 
 router = APIRouter(
     prefix = "/box",
@@ -19,17 +19,19 @@ router = APIRouter(
 
 
 @router.get("/mailbox")
-def get_mailbox(current_user: User = Depends(get_current_user),session: Session = Depends(get_db_session)):
+def get_mailbox(current_user_name :str = Depends(get_current_user_name)):
     """
     拿到当前用户所有的邮箱
-    :param current_user:
-    :param session:
+    :param current_user_name:
     :return:
     """
-    logger.debug(current_user.id)
-    mailbox_service = MailboxService(session=session)
-    resp = mailbox_service.get_mailbox_by_user_id(current_user.id)
-    return resp
+    with get_db_session() as session:
+        logger.debug(current_user_name)
+        mailbox_service = MailboxService(session=session)
+        user_server = UserServices(session=session)
+        user = user_server.get_user_by_name(current_user_name)
+        resp = mailbox_service.get_mailbox_by_user_id(user.id)
+        return resp
 
 
 @router.post("/create_mailbox")

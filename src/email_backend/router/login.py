@@ -9,9 +9,10 @@ from loguru import logger
 
 from src.email_backend.core.config import settings
 from src.email_backend.core.databases import get_db_session
-from src.email_backend.core.security import verify_password, create_access_token
+from src.email_backend.core.security import  create_access_token
 from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg
 from src.email_backend.services.userService import UserServices
+from src.email_backend.utils.common import verify_password_hash
 
 router = APIRouter(
     prefix="/user",
@@ -25,18 +26,11 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     """登录"""
     with get_db_session() as session:
         user_service = UserServices(session=session)
-        user = user_service.authenticate_user(form_data.username, form_data.password)
-        if not user:
-            raise HTTPException(
-                status_code=404,
-                detail="error！该用户不存在！",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        res = verify_password(form_data.password, user.password)
+        res = user_service.authenticate_user(form_data.username, form_data.password)
 
         if not res:
             raise HTTPException(status_code=401, detail="error！密码错误！")
-
+        user = user_service.get_user_by_name(form_data.username)
         access_token = create_access_token(data={"sub": user.name}, expires_delta=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         return Token(access_token=access_token, token_type="bearer")
 

@@ -37,7 +37,7 @@ def create_access_token(data: dict, expires_delta: int | None = None):
     # 3. 添加过期时间
     to_encode.update({"exp": expire})
 
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, settings.ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
 
@@ -47,7 +47,7 @@ def get_current_user_name(token: Annotated[str, Depends(oauth2_scheme)]) -> str:
     :return:
     """
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algoriyhms=settings.ALGORITHM)
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.ALGORITHM)
         username: str = payload.get("sub")
         logger.debug(f"username:{username}")
         if username is None:
