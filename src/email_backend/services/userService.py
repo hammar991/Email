@@ -1,19 +1,15 @@
 """
 用户crud
 """
-import jwt, jose
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from loguru import logger
 from sqlalchemy import func
 from sqlmodel import select
-from typing import Annotated
 
-from src.email_backend.core.security import get_password_hash
-from src.email_backend.core.config import settings
-from src.email_backend.schemes.dto import RegisterMsg, CredentialResponse, UserResetMsg
+from src.email_backend.schemes.dto import RegisterMsg, UserResetMsg
 from src.email_backend.schemes.entity import User
 from src.email_backend.services.serviceBase import ServiceBase
-from src.email_backend.core.security import oauth2_scheme
+from src.email_backend.utils.common import get_password_hash, verify_password_hash
 
 
 class UserServices(ServiceBase):
@@ -86,23 +82,5 @@ class UserServices(ServiceBase):
         resp: User | None = self._s.exec(statement).one()  # 确保仅 能查找到一行数据,
         if not resp:
             return False
-        return resp
 
-    # def get_current_user(self, token: Annotated[str, Depends(oauth2_scheme)]):
-    #     """
-    #     拿到当前用户
-    #     :return:
-    #     """
-    #     try:
-    #         payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
-    #         username: str = payload.get("sub")
-    #         if username is None:
-    #             raise CredentialResponse
-    #     except jose.JWTError:
-    #         raise CredentialResponse
-    #
-    #     # 验证用户是否存在
-    #     user = self._s.exec(select(User).where(User.name == username)).one()
-    #     if not user:
-    #         raise CredentialResponse
-    #     return user
+        return verify_password_hash(resp.password, password)
