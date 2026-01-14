@@ -9,9 +9,10 @@ from loguru import logger
 
 from src.email_backend.core.config import settings
 from src.email_backend.core.databases import get_db_session
-from src.email_backend.core.security import  create_access_token
-from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg
+from src.email_backend.core.security import create_access_token
+from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg, MailboxMsg
 from src.email_backend.services.userService import UserServices
+from src.email_backend.services.mailboxService import MailboxService
 from src.email_backend.utils.common import verify_password_hash
 
 router = APIRouter(
@@ -40,12 +41,21 @@ def register_user(user_data: RegisterMsg):
     """注册"""
     with get_db_session() as session:
         user_service = UserServices(session=session)
+        mailbox_service = MailboxService(session=session)
         logger.debug(user_data)
+
         # 创建用户
         res = user_service.create_user(data=user_data)
         logger.debug(res)
+        # 创建邮箱
+        user = user_service.get_user_by_name(user_data.name)
+        logger.debug(f"数据：{user_data.email} {user.id}")
+        mail_data: MailboxMsg = MailboxMsg(name=user_data.email, user_id=user.id)
+        logger.debug(mail_data)
+        res2 = mailbox_service.create_mailbox(mail_data)
+        logger.debug(res2)
 
-        if not res:
+        if not res or not res2:
             raise HTTPException(
                 status_code=404,
                 detail="创建失败！！"
@@ -76,4 +86,3 @@ def reset_password(form_data: UserResetMsg):
             )
 
         return {"detail": "更新成功！"}
-

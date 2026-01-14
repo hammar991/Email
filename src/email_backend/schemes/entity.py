@@ -12,7 +12,7 @@ class User(SQLModel, table=True):
     __tablename__ = "user"
     id: Optional[int] = Field(default=None, index=True, primary_key=True)
     name: str = Field(default=None, max_length=255, unique=True)
-    email: EmailStr = Field(default=None,unique=True, index=True, max_length=255)
+    email: EmailStr = Field(default=None, unique=True, index=True, max_length=255)
     password: str = Field(default=None, min_length=8, max_length=255)
 
 
@@ -20,7 +20,7 @@ class Mailbox(SQLModel, table=True):
     """邮箱表"""
     __tablename__ = "mailbox"
     id: Optional[int] = Field(default=None, index=True, primary_key=True)
-    box_name: str
+    box_name: EmailStr = Field(default=None, unique=True, index=True, max_length=255)
     user_id: int = Field(default=None, foreign_key="user.id")
 
 
@@ -40,8 +40,7 @@ def init_db(engine):
 if __name__ == '__main__':
     from src.email_backend.core.config import settings
     from sqlmodel import create_engine
+
     engine = create_engine(url=settings.DATABASE_URL, echo=True)
     print(engine)
     SQLModel.metadata.create_all(engine)
-
-

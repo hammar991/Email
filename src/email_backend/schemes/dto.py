@@ -53,6 +53,14 @@ class UserInfo(BaseModel):
     email: EmailStr
 
 
+class MailboxMsg(BaseModel):
+    name: EmailStr
+    user_id: int
+
+class ResMailboxMsg(BaseModel):
+    id : int
+    name : EmailStr
+
 class MessageInfo(BaseModel):
     context: str
 
