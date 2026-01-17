@@ -4,19 +4,32 @@
 
 from fastapi import APIRouter, Depends
 from loguru import logger
+from pydantic import EmailStr
 from sqlmodel import Session
 
 from src.email_backend.services.mailboxService import MailboxService
 from src.email_backend.services.userService import UserServices
 from src.email_backend.core.databases import get_db_session
-from src.email_backend.schemes.entity import User
+from src.email_backend.schemes.dto import MailboxMsg
 from src.email_backend.core.security import get_current_user_name
-from src.email_backend.schemes.dto import ResMailboxMsg
 
 router = APIRouter(
     prefix="/box",
     tags=["邮箱接口"]
 )
+
+
+@router.get("/mailbox/{box_name}")
+def get_mailbox(box_name: str, name : str):
+    """
+    获取某一邮箱
+    """
+    with get_db_session() as session:
+        mailbox_service = MailboxService(session=session)
+        user_server = UserServices(session=session)
+        user = user_server.get_user_by_name(name)
+        return mailbox_service.get_mailbox_by_name(box_name,user.id).model_dump(mode="json", exclude={"user_id"})
+
 
 
 @router.get("/mailbox")
@@ -31,28 +44,33 @@ def get_mailbox(current_user_name: str = Depends(get_current_user_name)):
         mailbox_service = MailboxService(session=session)
         user_server = UserServices(session=session)
         user = user_server.get_user_by_name(current_user_name)
-        logger.debug(user)
-        resp: ResMailboxMsg = mailbox_service.get_mailbox_by_user_id(user.id)
-        logger.debug('111', resp)
-        return {"result": resp}
+        return [i.model_dump(mode="json", exclude={"user_id"}, ) for i in
+                mailbox_service.get_mailbox_by_user_id(user.id)]
 
 
 @router.post("/create_mailbox")
-def create_mailbox():
+def create_mailbox(box_name: EmailStr, current_user_name: str = Depends(get_current_user_name)):
     """
     创建邮箱
     """
+    with get_db_session() as session:
+        mailbox_service = MailboxService(session=session)
+        user_server = UserServices(session=session)
+        entity = MailboxMsg(
+            name= box_name,
+            user_id=user_server.get_user_by_name(current_user_name).id,
+        )
+        return mailbox_service.create_mailbox(entity).model_dump(mode="json", exclude={"user_id", "id"})
 
-
-# @router.post("/mailbox")
-# def modify_mailbox():
-#     pass
 
 @router.delete("/mailbox")
-def get_mailbox():
-    pass
+def get_mailbox(box_id: int,  current_user_name: str = Depends(get_current_user_name)):
+    """
+    删除邮箱
+    """
+    with get_db_session() as session:
+        mailbox_service = MailboxService(session=session)
+        user_server = UserServices(session=session)
+        user = user_server.get_user_by_name(current_user_name)
+        return mailbox_service.delete_mailbox_by_id(box_id, user.id).model_dump(mode="json")
 
-
-@router.get("/share_mailbox")
-def share_mailbox():
-    pass

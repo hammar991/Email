@@ -5,9 +5,10 @@ from fastapi import HTTPException
 from sqlmodel import select
 from starlette import status
 from loguru import logger
+from typing import Iterable
 
 from src.email_backend.schemes.entity import Mailbox
-from src.email_backend.schemes.dto import MailboxMsg, ResMailboxMsg
+from src.email_backend.schemes.dto import MailboxMsg
 from src.email_backend.services.serviceBase import ServiceBase
 
 
@@ -15,13 +16,13 @@ class MailboxService(ServiceBase):
 
     def create_mailbox(self, mailbox: MailboxMsg):
         """创建邮箱"""
-        statement = Mailbox(box_name=mailbox.name, user_id=mailbox.user_id)
-        self._s.add(statement)
-        return True
+        entity = Mailbox(box_name=mailbox.name, user_id=mailbox.user_id)
+        self._s.add(entity)
+        return entity
 
-    def delete_mailbox(self, mailbox: MailboxMsg):
+    def delete_mailbox_by_id(self, mailbox_id: int, user_id: int):
         """删除邮箱"""
-        statement = select(Mailbox).where(Mailbox.box_name == mailbox.name and Mailbox.user_id == mailbox.user_id)
+        statement = select(Mailbox).where(Mailbox.id == mailbox_id and Mailbox.user_id == user_id)
         resp = self._s.exec(statement).one()
         if not resp:
             raise HTTPException(
@@ -29,11 +30,7 @@ class MailboxService(ServiceBase):
                 detail="未找到邮箱！"
             )
         self._s.delete(resp)
-        return True
-
-    # def update_mailbox(self, mailbox):
-    #     """更新邮箱信息"""
-    #     pass
+        return resp
 
     def get_mailbox_by_user_id(self, uid: int):
         """
@@ -42,7 +39,20 @@ class MailboxService(ServiceBase):
         :return:
         """
         statement = select(Mailbox).where(Mailbox.user_id == uid)
-        resp = self._s.exec(statement).all()
+        resp: Iterable[Mailbox] = self._s.exec(statement).all()
         logger.debug(resp)
         logger.debug(type(resp))
-        return [ResMailboxMsg.model_validate(m) for m in resp]
+        yield from resp
+
+    def get_mailbox_by_name(self, name: str, user_id: int):
+        """
+        拿到用户下所有邮箱
+        :param name:
+        :param user_id:
+        :return:
+        """
+        statement = select(Mailbox).where(Mailbox.box_name == name and Mailbox.user_id == user_id)
+        resp = self._s.exec(statement).one()
+        if not resp:
+            return None
+        return resp

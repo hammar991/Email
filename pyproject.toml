@@ -21,6 +21,7 @@ dependencies = [
 ]
 
 
-[[tool.uv.index]]
-url = "https://pypi.tuna.tsinghua.edu.cn/simple"
-default = true
+#[[tool.uv.index]]
+#url = "http://192.168.10.12:8081/repository/pypi/simple"
+#default = true
+
