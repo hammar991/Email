@@ -46,7 +46,7 @@ class MailboxService(ServiceBase):
 
     def get_mailbox_by_name(self, name: str, user_id: int):
         """
-        拿到用户下所有邮箱
+        根据邮箱名查取邮箱
         :param name:
         :param user_id:
         :return:
