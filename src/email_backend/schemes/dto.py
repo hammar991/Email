@@ -3,7 +3,7 @@
 """
 from dataclasses import field
 
-from pydantic import BaseModel, EmailStr, field_validator, ValidationError,model_validator
+from pydantic import BaseModel, EmailStr, field_validator, ValidationError, model_validator
 from fastapi.responses import JSONResponse
 from typing import Optional
 
@@ -59,10 +59,12 @@ class MailboxMsg(BaseModel):
 
 
 class MessageInfo(BaseModel):
+    headline: str
     context: str
+    box_id: int
 
 
 class CredentialResponse(BaseModel, JSONResponse):
     """验证失败响应"""
     status_code: int = 401
-    detail:str = "无法验证凭证!"
+    detail: str = "无法验证凭证!"
