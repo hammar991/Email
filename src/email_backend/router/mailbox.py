@@ -74,3 +74,15 @@ def get_mailbox(box_id: int,  current_user_name: str = Depends(get_current_user_
         user = user_server.get_user_by_name(current_user_name)
         return mailbox_service.delete_mailbox_by_id(box_id, user.id).model_dump(mode="json")
 
+"""无需登录"""
+@router.get("/share_mailbox/{share_token}")
+def get_public_mailbox(share_token: str):
+    """
+    公开分享信箱
+    """
+    logger.debug('2222',share_token)
+    with get_db_session() as session:
+        mailbox_service = MailboxService(session=session)
+        mailbox = mailbox_service.get_mailbox_by_share_token(share_token)
+        logger.debug('11',mailbox)
+        return mailbox.model_dump(mode="json", exclude={"user_id"})

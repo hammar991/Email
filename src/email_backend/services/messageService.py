@@ -1,6 +1,7 @@
 """
 信件crud
 """
+from src.email_backend.schemes.entity import Message
 
 class MessageService:
 
@@ -8,6 +9,9 @@ class MessageService:
         """
         创建邮件
         """
+        statement = Message(
+
+        )
 
     def delete_mail(self, mailbox):
         pass

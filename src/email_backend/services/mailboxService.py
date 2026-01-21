@@ -56,3 +56,19 @@ class MailboxService(ServiceBase):
         if not resp:
             return None
         return resp
+
+    def get_mailbox_by_share_token(self, share_token: str):
+        """
+        根据邮箱名查取邮箱
+        :param share_token:
+        :return:
+        """
+        statement = select(Mailbox).where(Mailbox.share_token == share_token)
+        resp = self._s.exec(statement).one()
+        logger.debug(resp)
+        if not resp:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="未找到信箱！"
+            )
+        return resp

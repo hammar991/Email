@@ -36,4 +36,8 @@ def delete_message():
     """
     pass
 
+@router.post("public/submit")
+def submit_message():
+    pass
+
 

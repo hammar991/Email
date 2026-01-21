@@ -4,7 +4,7 @@
 import uuid
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import EmailStr
-from typing import Optional,List
+from typing import Optional, List
 
 
 class User(SQLModel, table=True):
@@ -15,17 +15,18 @@ class User(SQLModel, table=True):
     email: EmailStr = Field(default=None, unique=True, index=True, max_length=255)
     password: str = Field(default=None, min_length=8, max_length=255)
 
-    mail_boxs : Optional[List["Mailbox"]] = Relationship(back_populates="user")
+    mail_boxs: Optional[List["Mailbox"]] = Relationship(back_populates="user")
+
 
 class Mailbox(SQLModel, table=True):
     """邮箱表"""
     __tablename__ = "mailbox"
     id: Optional[int] = Field(default=None, index=True, primary_key=True)
     box_name: EmailStr = Field(default=None, unique=True, index=True, max_length=255)
-
+    share_token: str = Field(default_factory=lambda: str(uuid.uuid4()), unique=True, index=True, max_length=255)
 
     user_id: int = Field(default=None, foreign_key="user.id")
-    user : Optional[User] = Relationship(back_populates="mail_boxs")
+    user: Optional[User] = Relationship(back_populates="mail_boxs")
     messages: Optional["Message"] = Relationship(back_populates="mailbox")
 
 
