@@ -1,11 +1,9 @@
 """
-序列化层：pydantic模型
+序列化层:pydantic模型
 """
-from dataclasses import field
 
-from pydantic import BaseModel, EmailStr, field_validator, ValidationError, model_validator
+from pydantic import BaseModel, EmailStr, model_validator
 from fastapi.responses import JSONResponse
-from typing import Optional
 
 
 class RegisterMsg(BaseModel):
@@ -53,8 +51,13 @@ class UserInfo(BaseModel):
     email: EmailStr
 
 
+class UserUpdate(BaseModel):
+    email: EmailStr
+
+
 class MailboxMsg(BaseModel):
     name: EmailStr
+    title: str
     user_id: int
 
 
@@ -62,6 +65,11 @@ class MessageInfo(BaseModel):
     headline: str
     context: str
     box_id: int
+
+
+class PublicMessageCreate(BaseModel):
+    headline: str
+    context: str
 
 
 class CredentialResponse(BaseModel, JSONResponse):

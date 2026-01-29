@@ -59,7 +59,7 @@ class MailboxService(ServiceBase):
 
     def get_mailbox_by_share_token(self, share_token: str):
         """
-        根据邮箱名查取邮箱
+        :param share_token:
         :param share_token:
         :return:
         """

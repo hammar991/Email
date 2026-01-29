@@ -1,5 +1,5 @@
 """
-邮箱接口
+信箱接口
 """
 
 from fastapi import APIRouter, Depends
@@ -15,14 +15,14 @@ from src.email_backend.core.security import get_current_user_name
 
 router = APIRouter(
     prefix="/box",
-    tags=["邮箱接口"]
+    tags=["信箱接口"]
 )
 
 
 @router.get("/mailbox/{box_name}")
 def get_mailbox(box_name: str, name : str):
     """
-    获取某一邮箱
+    获取某一信箱
     """
     with get_db_session() as session:
         mailbox_service = MailboxService(session=session)
@@ -35,7 +35,7 @@ def get_mailbox(box_name: str, name : str):
 @router.get("/mailbox")
 def get_mailbox(current_user_name: str = Depends(get_current_user_name)):
     """
-    拿到当前用户所有的邮箱
+    拿到当前用户所有的信箱
     :param current_user_name:
     :return:
     """
@@ -49,15 +49,16 @@ def get_mailbox(current_user_name: str = Depends(get_current_user_name)):
 
 
 @router.post("/mailbox")
-def create_mailbox(box_name: EmailStr, current_user_name: str = Depends(get_current_user_name)):
+def create_mailbox(box_name: EmailStr, title: str, current_user_name: str = Depends(get_current_user_name)):
     """
-    创建邮箱
+    创建信箱
     """
     with get_db_session() as session:
         mailbox_service = MailboxService(session=session)
         user_server = UserServices(session=session)
         entity = MailboxMsg(
             name= box_name,
+            title=title,
             user_id=user_server.get_user_by_name(current_user_name).id,
         )
         return mailbox_service.create_mailbox(entity).model_dump(mode="json", exclude={"user_id", "id"})
@@ -66,7 +67,7 @@ def create_mailbox(box_name: EmailStr, current_user_name: str = Depends(get_curr
 @router.delete("/mailbox")
 def get_mailbox(box_id: int,  current_user_name: str = Depends(get_current_user_name)):
     """
-    删除邮箱
+    删除信箱
     """
     with get_db_session() as session:
         mailbox_service = MailboxService(session=session)

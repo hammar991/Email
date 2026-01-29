@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "56f060e77af06f79b96dec1f5c4332cdc803b181354c4a40060502b7bc589fc4"
 
     # 数据库
-    DATABASE_URL: str = "sqlite:///../schemes/database.db"
+    DATABASE_URL: str = f"sqlite:///{os.path.join(os.path.dirname(__file__), '../schemes/database.db')}"
     POOL_SIZE: int =  256       # 连接池中保持打开的连接数量
     MAX_OVERFLOW: int = 0       # 设置连接池允许超出 pool_size 限制的最大连接数
 
