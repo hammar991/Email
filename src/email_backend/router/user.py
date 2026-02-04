@@ -27,7 +27,7 @@ def get_user(current_user_name: str = Depends(get_current_user_name)):
         return user.model_dump(mode="json")
 
 
-@router.post("/userinfo")
+@router.put("/userinfo")
 def update_user(user_data: UserUpdate, current_user_name: str = Depends(get_current_user_name)):
     """
     更新用户信息
