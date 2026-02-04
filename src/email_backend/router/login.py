@@ -41,21 +41,13 @@ def register_user(user_data: RegisterMsg):
     """注册"""
     with get_db_session() as session:
         user_service = UserServices(session=session)
-        mailbox_service = MailboxService(session=session)
         logger.debug(user_data)
 
         # 创建用户
         res = user_service.create_user(data=user_data)
         logger.debug(res)
-        # 创建信箱
-        user = user_service.get_user_by_name(user_data.name)
-        logger.debug(f"数据：{user_data.email} {user.id}")
-        mail_data: MailboxMsg = MailboxMsg(name=user_data.email, user_id=user.id)
-        logger.debug(mail_data)
-        res2 = mailbox_service.create_mailbox(mail_data)
-        logger.debug(res2)
 
-        if not res or not res2:
+        if not res:
             raise HTTPException(
                 status_code=404,
                 detail="创建失败！！"

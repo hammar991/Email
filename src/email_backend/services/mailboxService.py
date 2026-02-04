@@ -1,5 +1,5 @@
 """
-邮箱crud
+信箱crud
 """
 from fastapi import HTTPException
 from sqlmodel import select
@@ -15,38 +15,38 @@ from src.email_backend.services.serviceBase import ServiceBase
 class MailboxService(ServiceBase):
 
     def create_mailbox(self, mailbox: MailboxMsg):
-        """创建邮箱"""
-        entity = Mailbox(box_name=mailbox.name, user_id=mailbox.user_id)
+        """创建信箱"""
+        entity = Mailbox(box_name=mailbox.name, title=mailbox.title, user_id=mailbox.user_id)
         self._s.add(entity)
         return entity
 
     def delete_mailbox_by_id(self, mailbox_id: int, user_id: int):
-        """删除邮箱"""
+        """删除信箱"""
         statement = select(Mailbox).where(Mailbox.id == mailbox_id and Mailbox.user_id == user_id)
         resp = self._s.exec(statement).one()
         if not resp:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="未找到邮箱！"
+                detail="未找到信箱！"
             )
         self._s.delete(resp)
         return resp
 
     def get_mailbox_by_user_id(self, uid: int):
         """
-        拿到用户下所有邮箱
+        拿到用户下所有信箱
         :param uid:
         :return:
         """
         statement = select(Mailbox).where(Mailbox.user_id == uid)
-        resp: Iterable[Mailbox] = self._s.exec(statement).all()
+        resp: Iterable[Mailbox] | None = self._s.exec(statement).all()
         logger.debug(resp)
         logger.debug(type(resp))
         yield from resp
 
     def get_mailbox_by_name(self, name: str, user_id: int):
         """
-        根据邮箱名查取邮箱
+        根据信箱名查取信箱
         :param name:
         :param user_id:
         :return:

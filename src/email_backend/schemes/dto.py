@@ -4,6 +4,7 @@
 
 from pydantic import BaseModel, EmailStr, model_validator
 from fastapi.responses import JSONResponse
+from typing import Optional
 
 
 class RegisterMsg(BaseModel):
@@ -56,8 +57,8 @@ class UserUpdate(BaseModel):
 
 
 class MailboxMsg(BaseModel):
-    name: EmailStr
-    title: str
+    name: str
+    title: str | None
     user_id: int
 
 
@@ -69,8 +70,7 @@ class MessageInfo(BaseModel):
 
 class PublicMessageCreate(BaseModel):
     headline: str
-    context: str
-
+    context: Optional[str]
 
 class CredentialResponse(BaseModel, JSONResponse):
     """验证失败响应"""

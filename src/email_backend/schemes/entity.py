@@ -2,9 +2,12 @@
 数据层：SQLModel模型
 """
 import uuid
+
+from sqlalchemy import Column, DateTime, func
 from sqlmodel import SQLModel, Field, Relationship
-from pydantic import EmailStr
+from pydantic import EmailStr, field_serializer
 from typing import Optional, List
+from datetime import datetime
 
 
 class User(SQLModel, table=True):
@@ -22,7 +25,7 @@ class Mailbox(SQLModel, table=True):
     """信箱表"""
     __tablename__ = "mailbox"
     id: Optional[int] = Field(default=None, index=True, primary_key=True)
-    box_name: EmailStr = Field(default=None, unique=True, index=True, max_length=255)
+    box_name: str = Field(default=None, unique=True, index=True, max_length=255)
     title: str = Field(default=None, max_length=255)
     share_token: str = Field(default_factory=lambda: str(uuid.uuid4()), unique=True, index=True, max_length=255)
 
@@ -35,12 +38,18 @@ class Message(SQLModel, table=True):
     """信件表"""
     __tablename__ = "message"
     id: Optional[int] = Field(default=None, index=True, primary_key=True)
-    headline: str = Field(default=None, max_length=255, unique=True)
+    headline: str = Field(default=None, max_length=255)
     context: str | None = Field(max_length=255)
+    created_at: datetime = Field(sa_column=Column(DateTime(), default=func.now()))
 
     box_id: int = Field(default=None, foreign_key="mailbox.id")
     mailbox: Optional["Mailbox"] = Relationship(back_populates="messages")
 
+    # @field_serializer('created_at')
+    # def serialize_created_at(self, value: datetime):
+    #     if value:
+    #         return value.strftime('%Y-%m-%d %H:%M:%S')
+    #     return None
 
 def init_db(engine):
     """创建所有数据库表"""
