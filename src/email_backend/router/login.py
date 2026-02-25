@@ -10,10 +10,9 @@ from loguru import logger
 from src.email_backend.core.config import settings
 from src.email_backend.core.databases import get_db_session
 from src.email_backend.core.security import create_access_token
-from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg, MailboxMsg
+from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg, SuccessResponse
 from src.email_backend.services.userService import UserServices
-from src.email_backend.services.mailboxService import MailboxService
-from src.email_backend.utils.common import verify_password_hash
+
 
 router = APIRouter(
     prefix="/user",
@@ -77,4 +76,6 @@ def reset_password(form_data: UserResetMsg):
                 detail="更新数据失败！请再试一次!"
             )
 
-        return {"detail": "更新成功！"}
+        return SuccessResponse(
+            detail="更新成功"
+        )

@@ -101,3 +101,7 @@ class CredentialResponse(BaseModel, JSONResponse):
     """验证失败响应"""
     status_code: int = 401
     detail: str = "无法验证凭证!"
+
+class SuccessResponse(BaseModel):
+    status: int = 200
+    detail: str = ""
