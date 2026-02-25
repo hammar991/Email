@@ -7,30 +7,35 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 
 
+
 class RegisterMsg(BaseModel):
+    """ 注册请求 """
     name: str
     email: EmailStr
     password: str
 
 
 class RegisterResponse(BaseModel):
-    """注册响应"""
+    """ 注册响应 """
     status_code: int
     name: str
     detail: str
 
 
 class LoginMsg(BaseModel):
+    """ 登录请求 """
     name: str
     password: str
 
 
 class Token(BaseModel):
+    """ token """
     access_token: str
     token_type: str
 
 
 class UserResetMsg(BaseModel):
+    """ 用户重置密码 """
     name: str
     email: EmailStr
     password: str
@@ -47,26 +52,46 @@ class UserResetMsg(BaseModel):
 
 
 class UserInfo(BaseModel):
+    """ 获取用户信息请求 """
     id: int
     name: str
     email: EmailStr
 
 
 class UserUpdate(BaseModel):
+    """ 更新用户信息请求 """
+    email: EmailStr
+
+class UserResponse(BaseModel):
+    id : int
+    name: str
     email: EmailStr
 
 
 class MailboxMsg(BaseModel):
+    """ 获取信箱请求 """
     name: str
     title: str | None
     user_id: int
 
+class MailboxResponse(BaseModel):
+    """ 信箱数据响应 """
+    id:int
+    name: str
+    title: str
+    share_token: str
+
 
 class MessageInfo(BaseModel):
-    headline: str
+    headline:    str
     context: str
     box_id: int
 
+class MessageResponse(BaseModel):
+    id: int
+    headline: str
+    context: str
+    box_id: int
 
 class PublicMessageCreate(BaseModel):
     headline: str
