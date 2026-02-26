@@ -7,7 +7,6 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 
 
-
 class RegisterMsg(BaseModel):
     """ 注册请求 """
     name: str
@@ -62,8 +61,9 @@ class UserUpdate(BaseModel):
     """ 更新用户信息请求 """
     email: EmailStr
 
+
 class UserResponse(BaseModel):
-    id : int
+    id: int
     name: str
     email: EmailStr
 
@@ -74,33 +74,40 @@ class MailboxMsg(BaseModel):
     title: str | None
     user_id: int
 
+
 class MailboxResponse(BaseModel):
     """ 信箱数据响应 """
-    id:int
+    id: int
     name: str
     title: str
     share_token: str
 
 
 class MessageInfo(BaseModel):
-    headline:    str
+    """ 信件信息 """
+    headline: str
     context: str
     box_id: int
 
+
 class MessageResponse(BaseModel):
+    """ 信件响应 """
     id: int
     headline: str
     context: str
     box_id: int
 
+
 class PublicMessageCreate(BaseModel):
     headline: str
     context: Optional[str]
+
 
 class CredentialResponse(BaseModel, JSONResponse):
     """验证失败响应"""
     status_code: int = 401
     detail: str = "无法验证凭证!"
+
 
 class SuccessResponse(BaseModel):
     status: int = 200

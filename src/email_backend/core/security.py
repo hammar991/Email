@@ -15,7 +15,7 @@ from src.email_backend.schemes.dto import CredentialResponse
 
 
 # 查找包含Bearer令牌的Authorization头(www-Authorization 响应头); 未找到返回 401 error
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/user/login/access-token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
 
 
 def create_access_token(data: dict, expires_delta: int | None = None):

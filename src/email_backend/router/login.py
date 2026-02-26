@@ -15,7 +15,6 @@ from src.email_backend.services.userService import UserServices
 
 
 router = APIRouter(
-    prefix="/user",
     tags=["登录注册接口"]
 )
 
