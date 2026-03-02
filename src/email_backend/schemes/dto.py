@@ -100,6 +100,8 @@ class MessageResponse(BaseModel):
 
 class PublicMessageCreate(BaseModel):
     headline: str
+
+
     context: Optional[str]
 
 
