@@ -5,12 +5,12 @@ from sqlmodel import create_engine,Session
 from loguru import logger
 from contextlib import contextmanager
 
-from src.email_backend.core.config import settings
+from src.email_backend.core.config import SETTINGS
 
 
 
 # 创建数据库引擎
-engine = create_engine(url=settings.DATABASE_URL, echo=False, pool_size=settings.POOL_SIZE, max_overflow=settings.MAX_OVERFLOW)
+engine = create_engine(url=SETTINGS.database_url, echo=False, pool_size=SETTINGS.pool_size, max_overflow=SETTINGS.max_overflow)
 logger.info(f'创建数据库引擎：{engine}')
 
 
