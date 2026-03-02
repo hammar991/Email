@@ -2,12 +2,11 @@
 用户接口
 """
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from src.email_backend.core.databases import get_db_session
-from src.email_backend.core.security import get_current_user_name
-from src.email_backend.services.userService import UserServices
-from src.email_backend.schemes.dto import UserInfo,UserUpdate, UserResponse
+from src.email_backend.core.databases import DBSessionDependency
+from src.email_backend.core.security import AuthDependency
+from src.email_backend.schemes.dto import UserUpdate, UserResponse
 
 router = APIRouter(
     prefix="/user",
@@ -16,24 +15,18 @@ router = APIRouter(
 
 
 @router.get("/userinfo", response_model=UserResponse)
-def get_user(current_user_name: str = Depends(get_current_user_name)):
+def get_user(user: AuthDependency):
     """
     获取当前用户信息
     """
-    with get_db_session() as session:
-        user_service = UserServices(session=session)
-        user = user_service.get_user_by_name(current_user_name)
-        return user
+    return user
 
 
 @router.put("/userinfo", response_model=UserResponse)
-def update_user(user_data: UserUpdate, current_user_name: str = Depends(get_current_user_name)):
+def update_user(user_data: UserUpdate, user: AuthDependency, session: DBSessionDependency):
     """
     更新用户信息
     """
-    with get_db_session() as session:
-        user_service = UserServices(session=session)
-        user = user_service.get_user_by_name(current_user_name)
-        user.email = user_data.email
-        session.add(user)
-        return user
+    user.email = user_data.email
+    session.add(user)
+    return user

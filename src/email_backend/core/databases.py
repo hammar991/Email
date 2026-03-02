@@ -1,21 +1,19 @@
 """
 数据库连接
 """
-from sqlmodel import create_engine,Session
+from sqlmodel import create_engine, Session
+from fastapi import Depends
 from loguru import logger
-from contextlib import contextmanager
+from typing import Annotated
 
 from src.email_backend.core.config import SETTINGS
 
-
-
 # 创建数据库引擎
-engine = create_engine(url=SETTINGS.database_url, echo=False, pool_size=SETTINGS.pool_size, max_overflow=SETTINGS.max_overflow)
+engine = create_engine(url=SETTINGS.database_url, echo=False, pool_size=SETTINGS.pool_size,
+                       max_overflow=SETTINGS.max_overflow)
 logger.info(f'创建数据库引擎：{engine}')
 
 
-"""上下文管理器"""
-@contextmanager
 def get_db_session():
     with Session(engine) as session:
         try:
@@ -29,9 +27,13 @@ def get_db_session():
             session.commit()
             logger.trace("db session commit!")
 
-        except Exception as e:      # 发生异常,回滚事务  重新抛出异常
+        except Exception as e:  # 发生异常,回滚事务  重新抛出异常
             logger.exception(e)
             session.rollback()
             raise
-        finally:        # 无论是否异常 , 都会记录
+        finally:  # 无论是否异常 , 都会记录
             logger.trace("db session closed!")
+            session.close()
+
+
+DBSessionDependency: type[Session] = Annotated[Session, Depends(get_db_session)]
