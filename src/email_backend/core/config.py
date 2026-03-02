@@ -5,7 +5,7 @@
 import os
 from pydantic_settings import BaseSettings
 from loguru import logger
-
+from pathlib import Path
 
 class Settings(BaseSettings):
     # 项目基本信息
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     # jwt访问令牌
     access_token_expire_minutes: int = 360       # 访问令牌过期时间
     algorithm: str = "HS256"  # 算法
-    secret_key: str
+    secret_key: str = ''
 
     # 数据库
     database_url: str = f"sqlite:///{os.path.join(os.path.dirname(__file__), '../schemes/database.db')}"
@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     static_dir: str = os.path.join(os.getcwd(), "../static")
 
     class Config:
-        env_file = "email/.env"
+        env_file = Path(__file__).resolve().parent.parent.parent.parent / ".env"      # __file__ 本文件  resolve()获取绝对路径
 
 try:
     SETTINGS = Settings()
