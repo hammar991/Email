@@ -32,6 +32,7 @@ def get_mailbox(user: AuthDependency, session: DBSessionDependency):
     拿到当前用户所有的信箱
     """
     mailbox_service = MailboxService(session=session)
+    logger.debug('2222',mailbox_service)
     return mailbox_service.get_mailbox_by_user_id(user.id)
 
 

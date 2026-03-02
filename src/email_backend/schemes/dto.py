@@ -78,7 +78,7 @@ class MailboxMsg(BaseModel):
 class MailboxResponse(BaseModel):
     """ 信箱数据响应 """
     id: int
-    name: str
+    box_name: str
     title: str
     share_token: str
 
