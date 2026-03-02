@@ -10,12 +10,12 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from loguru import logger
 
-from src.email_backend.core.config import settings
+from src.email_backend.core.config import SETTINGS
 from src.email_backend.schemes.dto import CredentialResponse
 
 
 # 查找包含Bearer令牌的Authorization头(www-Authorization 响应头); 未找到返回 401 error
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{SETTINGS.api_v1_str}/login/access-token")
 
 
 def create_access_token(data: dict, expires_delta: int | None = None):
@@ -37,7 +37,7 @@ def create_access_token(data: dict, expires_delta: int | None = None):
     # 3. 添加过期时间
     to_encode.update({"exp": expire})
 
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, SETTINGS.secret_key, algorithm=SETTINGS.algorithm)
     return encoded_jwt
 
 
@@ -47,7 +47,7 @@ def get_current_user_name(token: Annotated[str, Depends(oauth2_scheme)]) -> str:
     :return:
     """
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.ALGORITHM)
+        payload = jwt.decode(token, SETTINGS.secret_key, algorithms=SETTINGS.algorithm)
         username: str = payload.get("sub")
         logger.debug(f"username:{username}")
         if username is None:

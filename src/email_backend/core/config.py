@@ -4,28 +4,35 @@
 """
 import os
 from pydantic_settings import BaseSettings
+from loguru import logger
 
 
 class Settings(BaseSettings):
     # 项目基本信息
-    TITLE :str = "信箱项目2.0"
-    API_V1_STR: str = "/api/v1"
-    VERSION: str = "0.1.0"
-    PROJECT_NAME: str = "信箱系统"
-    DESCRIPTION: str = "这是一个信箱系统，支持用户使用多个信箱进行收发邮件及分享邮箱，技术栈:FastAPI + SQLModel + Sqlite"
+    title :str = "信箱项目2.0"
+    api_v1_str: str = "/api/v1"
+    version: str = "0.1.0"
+    project_name: str = "信箱系统"
+    description: str = "这是一个信箱系统，支持用户使用多个信箱进行收发邮件及分享邮箱，技术栈:FastAPI + SQLModel + Sqlite"
 
     # jwt访问令牌
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30       # 访问令牌过期时间
-    ALGORITHM: str = "HS256"  # 算法
-    SECRET_KEY: str = "56f060e77af06f79b96dec1f5c4332cdc803b181354c4a40060502b7bc589fc4"
+    access_token_expire_minutes: int = 360       # 访问令牌过期时间
+    algorithm: str = "HS256"  # 算法
+    secret_key: str
 
     # 数据库
-    DATABASE_URL: str = f"sqlite:///{os.path.join(os.path.dirname(__file__), '../schemes/database.db')}"
-    POOL_SIZE: int =  256       # 连接池中保持打开的连接数量
-    MAX_OVERFLOW: int = 0       # 设置连接池允许超出 pool_size 限制的最大连接数
+    database_url: str = f"sqlite:///{os.path.join(os.path.dirname(__file__), '../schemes/database.db')}"
+    pool_size: int =  256       # 连接池中保持打开的连接数量
+    max_overflow: int = 0       # 设置连接池允许超出 pool_size 限制的最大连接数
 
     # 静态资源目录
-    STATIC_DIR: str = os.path.join(os.getcwd(), "../static")
+    static_dir: str = os.path.join(os.getcwd(), "../static")
 
+    class Config:
+        env_file = "email/.env"
 
-settings = Settings()
+try:
+    SETTINGS = Settings()
+except Exception as e:
+    logger.exception(e)
+    exit()

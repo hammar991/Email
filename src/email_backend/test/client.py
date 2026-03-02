@@ -2,12 +2,12 @@ from requests import Session
 from loguru import logger
 
 from src.email_backend.schemes.dto import RegisterMsg, LoginMsg
-from src.email_backend.core.config import settings
+from src.email_backend.core.config import SETTINGS
 
 
 class Client:
     def __init__(self, endpoint: str = "http://localhost:8003", timeout=30):
-        self.endpoint = f"{endpoint}{settings.API_V1_STR}"
+        self.endpoint = f"{endpoint}{SETTINGS.api_v1_str}"
         self.session = Session()
         self.token = None
         self.timeout = timeout

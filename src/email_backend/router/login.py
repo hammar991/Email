@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from loguru import logger
 
-from src.email_backend.core.config import settings
+from src.email_backend.core.config import SETTINGS
 from src.email_backend.core.databases import get_db_session
 from src.email_backend.core.security import create_access_token
 from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg, SuccessResponse
@@ -23,6 +23,8 @@ router = APIRouter(
 @router.post("/login/access-token")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     """登录"""
+    print(form_data.username)
+    print(form_data.password)
     with get_db_session() as session:
         user_service = UserServices(session=session)
         res = user_service.authenticate_user(form_data.username, form_data.password)
@@ -30,7 +32,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
         if not res:
             raise HTTPException(status_code=401, detail="error！密码错误！")
         user = user_service.get_user_by_name(form_data.username)
-        access_token = create_access_token(data={"sub": user.name}, expires_delta=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(data={"sub": user.name}, expires_delta=SETTINGS.access_token_expires_delta)
         return Token(access_token=access_token, token_type="bearer")
 
 
