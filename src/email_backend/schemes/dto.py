@@ -23,7 +23,7 @@ class RegisterResponse(BaseModel):
 
 class LoginMsg(BaseModel):
     """ 登录请求 """
-    name: str
+    username: str
     password: str
 
 
