@@ -36,6 +36,13 @@ class UserServices(ServiceBase):
                     detail="用户名已存在!"
                 )
 
+        email_res = self._s.exec(select(User).where(User.email == data.email)).one_or_none()
+        if email_res:
+            raise HTTPException(
+                status_code=401,
+                detail="此邮箱已绑定账号！"
+            )
+
         # 插入数据
         statement2 = User(name=data.name, email=data.email, password=data.password)
         print(statement2)
@@ -48,7 +55,7 @@ class UserServices(ServiceBase):
         :return:
         """
         statement = select(User).where(User.name == data.name and User.email == data.email)
-        resp = self._s.exec(statement).one()
+        resp = self._s.exec(statement).one_or_none()
 
         if not resp:
             raise HTTPException(
