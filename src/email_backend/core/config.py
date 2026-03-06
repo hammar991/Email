@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     description: str = "这是一个信箱系统，支持用户使用多个信箱进行收发邮件及分享邮箱，技术栈:FastAPI + SQLModel + Sqlite"
 
     # jwt访问令牌
-    access_token_expire_minutes: int = 360       # 访问令牌过期时间
+    access_token_expire_minutes: int = 180       # 访问令牌过期时间
     algorithm: str = "HS256"  # 算法
     secret_key: str = ''
 
