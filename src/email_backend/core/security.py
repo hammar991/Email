@@ -36,7 +36,7 @@ def create_access_token(data: dict, expires_delta: int | None = None):
     if expires_delta:
         expire = datetime.now(timezone.utc) + timedelta(minutes=expires_delta)
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=30)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=180)
 
     # 3. 添加过期时间
     to_encode.update({"exp": expire})
