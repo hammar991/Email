@@ -37,17 +37,12 @@ def get_mailbox(user: AuthDependency, session: DBSessionDependency):
 
 
 @router.post("/mailbox", response_model=MailboxResponse)
-def create_mailbox(box_name: str, title: str, user: AuthDependency, session: DBSessionDependency):
+def create_mailbox(mailbox_msg: MailboxMsg, user: AuthDependency, session: DBSessionDependency):
     """
     创建信箱
     """
     mailbox_service = MailboxService(session=session)
-    entity = MailboxMsg(
-        name= box_name,
-        title=title,
-        user_id=user.id,
-    )
-    return mailbox_service.create_mailbox(entity)
+    return mailbox_service.create_mailbox(mailbox_msg, user.id)
 
 
 @router.delete("/mailbox",response_model=MailboxResponse)

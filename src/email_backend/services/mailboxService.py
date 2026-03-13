@@ -14,9 +14,9 @@ from src.email_backend.services.serviceBase import ServiceBase
 
 class MailboxService(ServiceBase):
 
-    def create_mailbox(self, mailbox: MailboxMsg):
+    def create_mailbox(self, mailbox: MailboxMsg, user_id: int):
         """创建信箱"""
-        entity = Mailbox(box_name=mailbox.name, title=mailbox.title, user_id=mailbox.user_id)
+        entity = Mailbox(box_name=mailbox.name, title=mailbox.title, user_id=user_id)
         self._s.add(entity)
         return entity
 

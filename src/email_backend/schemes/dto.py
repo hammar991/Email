@@ -72,7 +72,7 @@ class MailboxMsg(BaseModel):
     """ 获取信箱请求 """
     name: str
     title: str | None
-    user_id: int
+
 
 
 class MailboxResponse(BaseModel):
