@@ -61,6 +61,4 @@ def get_public_mailbox(share_token: str, session: DBSessionDependency):
     """
     logger.debug('2222',share_token)
     mailbox_service = MailboxService(session=session)
-    mailbox = mailbox_service.get_mailbox_by_share_token(share_token)
-    logger.debug('11',mailbox)
-    return mailbox
+    return mailbox_service.get_mailbox_by_share_token(share_token)
