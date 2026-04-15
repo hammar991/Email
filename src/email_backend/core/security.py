@@ -11,11 +11,11 @@ from fastapi.security import OAuth2PasswordBearer
 from loguru import logger
 from sqlmodel import Session
 
-from core.config import SETTINGS
-from schemes.dto import CredentialResponse
-from schemes.entity import User
-from services.userService import UserServices
-from core.databases import get_db_session
+from src.email_backend.core.config import SETTINGS
+from src.email_backend.schemes.dto import CredentialResponse
+from src.email_backend.schemes.entity import User
+from src.email_backend.services.userService import UserServices
+from src.email_backend.core.databases import get_db_session
 
 
 # 查找包含Bearer令牌的Authorization头(www-Authorization 响应头); 未找到返回 401 error

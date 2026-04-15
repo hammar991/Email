@@ -4,9 +4,9 @@
 
 from fastapi import APIRouter
 
-from core.databases import DBSessionDependency
-from core.security import AuthDependency
-from schemes.dto import UserUpdate, UserResponse
+from src.email_backend.core.databases import DBSessionDependency
+from src.email_backend.core.security import AuthDependency
+from src.email_backend.schemes.dto import UserUpdate, UserResponse
 
 router = APIRouter(
     prefix="/user",

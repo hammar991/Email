@@ -6,9 +6,9 @@ from sqlmodel import select
 from starlette import status
 from typing import Iterable
 
-from schemes.entity import Message, Mailbox
-from schemes.dto import MessageInfo
-from services.serviceBase import ServiceBase
+from src.email_backend.schemes.entity import Message, Mailbox
+from src.email_backend.schemes.dto import MessageInfo
+from src.email_backend.services.serviceBase import ServiceBase
 
 
 class MessageService(ServiceBase):

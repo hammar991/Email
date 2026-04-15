@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from typing import List
 
-from services.messageService import MessageService
-from core.databases import DBSessionDependency
-from core.security import AuthDependency
-from schemes.dto import PublicMessageCreate, MessageInfo,MessageResponse
+from src.email_backend.services.messageService import MessageService
+from src.email_backend.core.databases import DBSessionDependency
+from src.email_backend.core.security import AuthDependency
+from src.email_backend.schemes.dto import PublicMessageCreate, MessageInfo,MessageResponse
 
 router = APIRouter(
     prefix="/message",

@@ -7,11 +7,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from loguru import logger
 
-from core.config import SETTINGS
-from core.databases import DBSessionDependency
-from core.security import create_access_token
-from schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg, SuccessResponse
-from services.userService import UserServices
+from src.email_backend.core.config import SETTINGS
+from src.email_backend.core.databases import DBSessionDependency
+from src.email_backend.core.security import create_access_token
+from src.email_backend.schemes.dto import Token, RegisterMsg, RegisterResponse, UserResetMsg, SuccessResponse
+from src.email_backend.services.userService import UserServices
 
 router = APIRouter(
     tags=["登录注册接口"]

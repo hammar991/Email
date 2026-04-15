@@ -8,10 +8,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
-from app.api_router import api_router
-from core.config import SETTINGS
-from core.databases import engine
-from schemes.entity import init_db
+from src.email_backend.app.api_router import api_router
+from src.email_backend.core.config import SETTINGS
+from src.email_backend.core.databases import engine
+from src.email_backend.schemes.entity import init_db
 
 
 @asynccontextmanager

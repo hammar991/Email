@@ -6,7 +6,7 @@ from fastapi import Depends
 from loguru import logger
 from typing import Annotated
 
-from core.config import SETTINGS
+from src.email_backend.core.config import SETTINGS
 
 # 创建数据库引擎
 engine = create_engine(url=SETTINGS.database_url, echo=False, pool_size=SETTINGS.pool_size,
