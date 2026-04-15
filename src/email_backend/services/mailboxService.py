@@ -7,9 +7,9 @@ from starlette import status
 from loguru import logger
 from typing import Iterable
 
-from src.email_backend.schemes.entity import Mailbox
-from src.email_backend.schemes.dto import MailboxMsg
-from src.email_backend.services.serviceBase import ServiceBase
+from schemes.entity import Mailbox
+from schemes.dto import MailboxMsg
+from services.serviceBase import ServiceBase
 
 
 class MailboxService(ServiceBase):

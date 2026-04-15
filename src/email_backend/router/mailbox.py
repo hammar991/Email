@@ -5,10 +5,10 @@ from fastapi import APIRouter
 from loguru import logger
 from typing import List
 
-from src.email_backend.services.mailboxService import MailboxService
-from src.email_backend.core.databases import DBSessionDependency
-from src.email_backend.schemes.dto import MailboxMsg, MailboxResponse
-from src.email_backend.core.security import AuthDependency
+from services.mailboxService import MailboxService
+from core.databases import DBSessionDependency
+from schemes.dto import MailboxMsg, MailboxResponse
+from core.security import AuthDependency
 
 router = APIRouter(
     prefix="/box",

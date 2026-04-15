@@ -6,10 +6,10 @@ from loguru import logger
 from sqlalchemy import func
 from sqlmodel import select
 
-from src.email_backend.schemes.dto import RegisterMsg, UserResetMsg
-from src.email_backend.schemes.entity import User
-from src.email_backend.services.serviceBase import ServiceBase
-from src.email_backend.utils.common import get_password_hash, verify_password_hash
+from schemes.dto import RegisterMsg, UserResetMsg
+from schemes.entity import User
+from services.serviceBase import ServiceBase
+from utils.common import get_password_hash, verify_password_hash
 
 
 class UserServices(ServiceBase):

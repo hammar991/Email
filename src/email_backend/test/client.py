@@ -1,8 +1,8 @@
 from requests import Session
 from loguru import logger
 
-from src.email_backend.schemes.dto import RegisterMsg, LoginMsg
-from src.email_backend.core.config import SETTINGS
+from schemes.dto import RegisterMsg, LoginMsg
+from core.config import SETTINGS
 
 
 class Client:
