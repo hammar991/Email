@@ -3,10 +3,9 @@
     <div class="auth-layout">
       <section class="auth-copy">
         <p class="eyebrow">Mailbox Access</p>
-        <h1>登录或注册后进入信箱控制台</h1>
+        <h1>登录或注册后进入邮箱控制台</h1>
         <p class="hero-copy">
-          使用 Vue 3、Vite 与 Naive UI 构建的认证入口。右侧卡片保留参考图那种简洁排版，
-          但表单结构完全使用 Naive UI Form。
+          使用 Vue 3、Vite 与 Naive UI 构建认证入口，右侧保留简洁清晰的登录卡片，并补充找回密码弹窗流程。
         </p>
       </section>
 
@@ -48,7 +47,7 @@
                   />
                 </n-form-item>
 
-                <div class="auth-actions">
+                <div class="auth-actions auth-actions-login">
                   <n-button
                     class="auth-action-button"
                     type="primary"
@@ -57,9 +56,9 @@
                   >
                     登录
                   </n-button>
-                  <n-button class="auth-action-button" secondary @click="authMode = 'register'">
-                    注册
-                  </n-button>
+                  <a class="auth-text-link" href="" @click.prevent="openResetPasswordModal">
+                    找回密码
+                  </a>
                 </div>
               </n-form>
             </n-tab-pane>
@@ -121,6 +120,78 @@
           </n-tabs>
         </div>
       </n-card>
+
+      <n-modal v-model:show="showResetPasswordModal" @after-leave="resetResetPasswordForm">
+        <n-card
+          class="reset-password-modal"
+          title="找回密码"
+          :bordered="false"
+          size="huge"
+          role="dialog"
+          aria-modal="true"
+          closable
+          @close="closeResetPasswordModal"
+        >
+          <n-form
+            ref="resetPasswordFormRef"
+            class="auth-form auth-modal-form"
+            :model="resetPasswordForm"
+            :rules="resetPasswordRules"
+            label-placement="top"
+            require-mark-placement="right-hanging"
+            @submit.prevent="handleResetPassword"
+          >
+            <n-form-item path="name" label="用户名" class="auth-form-item">
+              <n-input
+                v-model:value="resetPasswordForm.name"
+                class="auth-field-input"
+                placeholder="Please Input"
+                @keydown.enter.prevent="handleResetPassword"
+              />
+            </n-form-item>
+
+            <n-form-item path="email" label="邮箱" class="auth-form-item">
+              <n-input
+                v-model:value="resetPasswordForm.email"
+                class="auth-field-input"
+                placeholder="Please Input"
+                @keydown.enter.prevent="handleResetPassword"
+              />
+            </n-form-item>
+
+            <n-form-item path="password" label="新密码" class="auth-form-item">
+              <n-input
+                v-model:value="resetPasswordForm.password"
+                class="auth-field-input"
+                type="password"
+                show-password-on="click"
+                placeholder="Please Input"
+                @keydown.enter.prevent="handleResetPassword"
+              />
+            </n-form-item>
+
+            <n-form-item path="ensure_password" label="确认密码" class="auth-form-item">
+              <n-input
+                v-model:value="resetPasswordForm.ensure_password"
+                class="auth-field-input"
+                type="password"
+                show-password-on="click"
+                placeholder="Please Input"
+                @keydown.enter.prevent="handleResetPassword"
+              />
+            </n-form-item>
+
+            <div class="reset-modal-actions">
+              <n-button attr-type="button" secondary @click="closeResetPasswordModal">
+                取消
+              </n-button>
+              <n-button type="primary" :loading="authStore.loading" attr-type="submit">
+                提交
+              </n-button>
+            </div>
+          </n-form>
+        </n-card>
+      </n-modal>
     </div>
   </div>
 </template>
@@ -138,7 +209,9 @@ const authStore = useAuthStore();
 
 const loginFormRef = ref<FormInst | null>(null);
 const registerFormRef = ref<FormInst | null>(null);
+const resetPasswordFormRef = ref<FormInst | null>(null);
 const authMode = ref<"login" | "register">("login");
+const showResetPasswordModal = ref(false);
 
 const loginForm = reactive({
   username: "",
@@ -151,6 +224,13 @@ const registerForm = reactive({
   password: "",
 });
 
+const resetPasswordForm = reactive({
+  name: "",
+  email: "",
+  password: "",
+  ensure_password: "",
+});
+
 const redirectPath = computed(() => {
   const redirect = route.query.redirect;
   return typeof redirect === "string" && redirect.length > 0 ? redirect : "/dashboard";
@@ -160,14 +240,14 @@ const loginRules: FormRules = {
   username: [
     {
       required: true,
-      message: "username 不能为空",
+      message: "请输入用户名",
       trigger: ["input", "blur"],
     },
   ],
   password: [
     {
       required: true,
-      message: "password 不能为空",
+      message: "请输入密码",
       trigger: ["input", "blur"],
     },
   ],
@@ -177,30 +257,84 @@ const registerRules: FormRules = {
   name: [
     {
       required: true,
-      message: "name 不能为空",
+      message: "请输入用户名",
       trigger: ["input", "blur"],
     },
   ],
   email: [
     {
       required: true,
-      message: "email 不能为空",
+      message: "请输入邮箱",
       trigger: ["input", "blur"],
     },
     {
       type: "email",
-      message: "email 格式不正确",
+      message: "请输入正确的邮箱格式",
       trigger: ["input", "blur"],
     },
   ],
   password: [
     {
       required: true,
-      message: "password 不能为空",
+      message: "请输入密码",
       trigger: ["input", "blur"],
     },
   ],
 };
+
+const resetPasswordRules: FormRules = {
+  name: [
+    {
+      required: true,
+      message: "请输入用户名",
+      trigger: ["input", "blur"],
+    },
+  ],
+  email: [
+    {
+      required: true,
+      message: "请输入邮箱",
+      trigger: ["input", "blur"],
+    },
+    {
+      type: "email",
+      message: "请输入正确的邮箱格式",
+      trigger: ["input", "blur"],
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: "请输入新密码",
+      trigger: ["input", "blur"],
+    },
+  ],
+  ensure_password: [
+    {
+      required: true,
+      message: "请再次输入新密码",
+      trigger: ["input", "blur"],
+    },
+  ],
+};
+
+function resetResetPasswordForm() {
+  resetPasswordForm.name = "";
+  resetPasswordForm.email = "";
+  resetPasswordForm.password = "";
+  resetPasswordForm.ensure_password = "";
+  resetPasswordFormRef.value?.restoreValidation();
+}
+
+function openResetPasswordModal() {
+  resetResetPasswordForm();
+  resetPasswordForm.name = loginForm.username;
+  showResetPasswordModal.value = true;
+}
+
+function closeResetPasswordModal() {
+  showResetPasswordModal.value = false;
+}
 
 async function handleLogin() {
   try {
@@ -227,6 +361,34 @@ async function handleRegister() {
     loginForm.username = registerForm.name;
     registerForm.password = "";
     authMode.value = "login";
+  } catch (error) {
+    if (error instanceof Error) {
+      message.error(error.message);
+    }
+  }
+}
+
+async function handleResetPassword() {
+  try {
+    await resetPasswordFormRef.value?.validate();
+
+    if (resetPasswordForm.password !== resetPasswordForm.ensure_password) {
+      message.error("两次输入的密码不一致");
+      return;
+    }
+
+    const response = await authStore.resetPassword({
+      name: resetPasswordForm.name,
+      email: resetPasswordForm.email,
+      password: resetPasswordForm.password,
+      ensure_password: resetPasswordForm.ensure_password,
+    });
+
+    loginForm.username = resetPasswordForm.name;
+    loginForm.password = "";
+    authMode.value = "login";
+    closeResetPasswordModal();
+    message.success(response.detail || "密码重置成功，请重新登录");
   } catch (error) {
     if (error instanceof Error) {
       message.error(error.message);
