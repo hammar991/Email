@@ -1,26 +1,53 @@
 <template>
-  <n-layout has-sider class="console-shell">
-    <n-layout-sider
-      v-model:collapsed="sidebarCollapsed"
-      bordered
-      collapse-mode="width"
-      :collapsed-width="88"
-      :width="220"
-      show-trigger="bar"
-      class="console-sider"
-    >
-      <div class="console-sider-inner">
-        <div class="console-side-brand" :class="{ collapsed: sidebarCollapsed }">
-          <n-avatar class="console-logo" round size="large" color="#111827">
-            <n-icon size="20"><MailIcon /></n-icon>
+  <n-layout class="console-shell">
+    <n-layout-header class="console-header">
+      <div class="console-header-left">
+        <div class="console-brand">
+          <n-avatar class="console-brand-logo" round color="#111827">
+            <n-icon size="18"><MailIcon /></n-icon>
           </n-avatar>
-          <div v-if="!sidebarCollapsed" class="console-side-brand-copy">
+          <div class="console-brand-copy">
             <strong>Quiet Inbox</strong>
           </div>
         </div>
 
-        <div class="console-side-section">
-          <p v-if="!sidebarCollapsed" class="console-side-section-title">控制台</p>
+        <n-menu
+          mode="horizontal"
+          class="console-top-menu"
+          :value="activeTopMenu"
+          :options="topMenuOptions"
+          @update:value="handleTopMenuSelect"
+        />
+      </div>
+
+      <n-space align="center" :size="12" class="console-header-actions">
+        <n-button circle quaternary :loading="dashboardRefreshing" @click="refreshDashboard">
+          <n-icon size="16"><RefreshIcon /></n-icon>
+        </n-button>
+        <n-button quaternary @click="handleLogout">退出登录</n-button>
+        <div class="console-user-pill">
+          <n-avatar round color="#60a5fa">{{ userInitial }}</n-avatar>
+          <div class="console-user-copy">
+            <strong>{{ authStore.user?.name ?? "未登录" }}</strong>
+            <span>{{ authStore.user?.email ?? "暂无邮箱" }}</span>
+          </div>
+        </div>
+      </n-space>
+    </n-layout-header>
+
+    <n-layout has-sider class="console-body">
+      <n-layout-sider
+        v-model:collapsed="sidebarCollapsed"
+        bordered
+        collapse-mode="width"
+        :collapsed-width="88"
+        :width="220"
+        show-trigger="bar"
+        class="console-sider"
+      >
+        <div class="console-sider-inner">
+          <div class="console-side-section">
+            <p v-if="!sidebarCollapsed" class="console-side-section-title">控制台</p>
           <n-space vertical :size="10" class="console-rail">
             <n-tooltip v-for="item in primaryRailActions" :key="item.key" placement="right">
               <template #trigger>
@@ -66,41 +93,6 @@
     </n-layout-sider>
 
     <n-layout class="console-main">
-      <n-layout-header class="console-header">
-        <div class="console-header-left">
-          <div class="console-brand">
-            <n-avatar class="console-brand-logo" round color="#111827">
-              <n-icon size="18"><MailIcon /></n-icon>
-            </n-avatar>
-            <div class="console-brand-copy">
-              <strong>Quiet Inbox</strong>
-            </div>
-          </div>
-
-          <n-menu
-            mode="horizontal"
-            class="console-top-menu"
-            :value="activeTopMenu"
-            :options="topMenuOptions"
-            @update:value="handleTopMenuSelect"
-          />
-        </div>
-
-        <n-space align="center" :size="12" class="console-header-actions">
-          <n-button circle quaternary :loading="dashboardRefreshing" @click="refreshDashboard">
-            <n-icon size="16"><RefreshIcon /></n-icon>
-          </n-button>
-          <n-button quaternary @click="handleLogout">退出</n-button>
-          <div class="console-user-pill">
-            <n-avatar round color="#60a5fa">{{ userInitial }}</n-avatar>
-            <div class="console-user-copy">
-              <strong>{{ authStore.user?.name ?? "未登录" }}</strong>
-              <span>{{ authStore.user?.email ?? "暂无邮箱" }}</span>
-            </div>
-          </div>
-        </n-space>
-      </n-layout-header>
-
       <n-layout-content class="console-content">
         <section ref="overviewSectionRef" class="console-welcome">
           <div>
@@ -231,6 +223,7 @@
           </aside>
         </div>
       </n-layout-content>
+    </n-layout>
     </n-layout>
   </n-layout>
 </template>

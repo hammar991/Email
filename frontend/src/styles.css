@@ -216,6 +216,7 @@ textarea {
 }
 
 .console-shell {
+  --console-header-offset: 74px;
   min-height: 100vh;
   background: transparent !important;
 }
@@ -224,7 +225,14 @@ textarea {
   min-height: 100vh;
 }
 
+.console-body {
+  min-height: calc(100vh - var(--console-header-offset));
+  background: transparent !important;
+}
+
 .console-sider {
+  position: relative;
+  z-index: 1;
   background: linear-gradient(180deg, rgba(252, 248, 243, 0.98), rgba(247, 244, 239, 0.94)) !important;
   backdrop-filter: blur(18px);
   box-shadow: inset -1px 0 0 rgba(226, 232, 240, 0.92);
@@ -240,43 +248,9 @@ textarea {
   flex-direction: column;
   align-items: stretch;
   gap: 18px;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--console-header-offset));
+  box-sizing: border-box;
   padding: 18px 16px 20px;
-}
-
-.console-side-brand {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-  padding: 6px 8px 14px;
-  margin-bottom: 6px;
-  text-align: left;
-}
-
-.console-side-brand.collapsed {
-  justify-content: center;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.console-side-brand-copy {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-}
-
-.console-side-brand-copy strong {
-  font-size: 1.04rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #1f2937;
-}
-
-.console-logo {
-  flex: 0 0 36px;
-  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.18);
 }
 
 .console-side-section {
@@ -368,17 +342,19 @@ textarea {
 }
 
 .console-main {
+  min-width: 0;
   background: transparent !important;
 }
 
 .console-header {
   position: sticky;
   top: 0;
-  z-index: 12;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  box-sizing: border-box;
   padding: 14px 28px;
   background: rgba(255, 255, 255, 0.84);
   backdrop-filter: blur(20px);
@@ -955,6 +931,10 @@ textarea {
 }
 
 @media (max-width: 1024px) {
+  .console-shell {
+    --console-header-offset: 122px;
+  }
+
   .auth-layout,
   .dashboard-top-grid {
     grid-template-columns: 1fr;
