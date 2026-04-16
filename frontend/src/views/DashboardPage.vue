@@ -19,24 +19,49 @@
           </div>
         </div>
 
-        <n-space vertical :size="12" class="console-rail">
-          <n-tooltip v-for="item in railActions" :key="item.key" placement="right">
-            <template #trigger>
-              <n-button
-                quaternary
-                class="console-rail-button"
-                :class="{ 'is-active': activeRail === item.key, 'is-collapsed': sidebarCollapsed }"
-                @click="handleRailAction(item.key)"
-              >
-                <template #icon>
-                  <n-icon size="18"><component :is="item.icon" /></n-icon>
-                </template>
-                <span v-if="!sidebarCollapsed">{{ item.label }}</span>
-              </n-button>
-            </template>
-            {{ item.label }}
-          </n-tooltip>
-        </n-space>
+        <div class="console-side-section">
+          <p v-if="!sidebarCollapsed" class="console-side-section-title">控制台</p>
+          <n-space vertical :size="10" class="console-rail">
+            <n-tooltip v-for="item in primaryRailActions" :key="item.key" placement="right">
+              <template #trigger>
+                <n-button
+                  quaternary
+                  class="console-rail-button"
+                  :class="{ 'is-active': activeRail === item.key, 'is-collapsed': sidebarCollapsed }"
+                  @click="handleRailAction(item.key)"
+                >
+                  <template #icon>
+                    <n-icon size="18"><component :is="item.icon" /></n-icon>
+                  </template>
+                  <span v-if="!sidebarCollapsed">{{ item.label }}</span>
+                </n-button>
+              </template>
+              {{ item.label }}
+            </n-tooltip>
+          </n-space>
+        </div>
+
+        <div class="console-side-section console-side-section-secondary">
+          <p v-if="!sidebarCollapsed" class="console-side-section-title">个人中心</p>
+          <n-space vertical :size="10" class="console-rail">
+            <n-tooltip v-for="item in secondaryRailActions" :key="item.key" placement="right">
+              <template #trigger>
+                <n-button
+                  quaternary
+                  class="console-rail-button"
+                  :class="{ 'is-active': activeRail === item.key, 'is-collapsed': sidebarCollapsed }"
+                  @click="handleRailAction(item.key)"
+                >
+                  <template #icon>
+                    <n-icon size="18"><component :is="item.icon" /></n-icon>
+                  </template>
+                  <span v-if="!sidebarCollapsed">{{ item.label }}</span>
+                </n-button>
+              </template>
+              {{ item.label }}
+            </n-tooltip>
+          </n-space>
+        </div>
       </div>
     </n-layout-sider>
 
@@ -44,7 +69,7 @@
       <n-layout-header class="console-header">
         <div class="console-header-left">
           <div class="console-brand">
-            <n-avatar round color="#111827">
+            <n-avatar class="console-brand-logo" round color="#111827">
               <n-icon size="18"><MailIcon /></n-icon>
             </n-avatar>
             <div class="console-brand-copy">
@@ -80,7 +105,10 @@
         <section ref="overviewSectionRef" class="console-welcome">
           <div>
             <p class="console-greeting-kicker">Dashboard</p>
-            <h1>早上好，{{ authStore.user?.name ?? "欢迎回来" }}</h1>
+            <h1 class="console-greeting-title">
+              <span class="console-greeting-emoji">👋</span>
+              <span>早上好，{{ authStore.user?.name ?? "欢迎回来" }}</span>
+            </h1>
             <p>当前已连接 {{ mailboxRows.length }} 个信箱，已加载 {{ totalLoadedMessages }} 条信件。</p>
           </div>
           <n-space>
@@ -247,6 +275,8 @@ const RefreshIcon = createIcon([{ tag: "path", attrs: { d: "M20 11a8 8 0 1 0 2 5
 
 const topMenuOptions: MenuOption[] = [{ label: "首页", key: "home" }, { label: "控制台", key: "dashboard" }, { label: "文档", key: "docs" }];
 const railActions = [{ key: "overview", label: "总览", icon: DashboardIcon }, { key: "mailboxes", label: "信箱", icon: BoxIcon }, { key: "messages", label: "信件", icon: MessageIcon }, { key: "settings", label: "设置", icon: SettingIcon }] as const;
+const primaryRailActions = railActions.filter((item) => item.key !== "settings");
+const secondaryRailActions = railActions.filter((item) => item.key === "settings");
 
 const userInitial = computed(() => (authStore.user?.name?.slice(0, 1).toUpperCase() || "U"));
 const mailboxRows = computed<DashboardMailboxRow[]>(() => [...mailStore.mailboxes].map((item) => ({ ...item, messageCount: mailStore.messages[item.id]?.length ?? 0, shared: Boolean(item.share_token) })).sort((a, b) => b.id - a.id));

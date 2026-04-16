@@ -76,12 +76,16 @@ async function request<T>(path: string, options: RequestOptions = {}) {
   let lastError: Error | null = null;
 
   for (const [index, candidate] of candidates.entries()) {
-
     try {
+      const isFormBody = options.body instanceof FormData || options.body instanceof URLSearchParams;
+      const hasExplicitContentType = Object.keys(options.headers ?? {}).some(
+        (header) => header.toLowerCase() === "content-type",
+      );
+
       const response = await fetch(buildUrl(candidate, path, options.query), {
         method: options.method ?? "GET",
         headers: {
-          ...(options.body && !(options.body instanceof FormData)
+          ...(options.body && !isFormBody && !hasExplicitContentType
             ? { "Content-Type": "application/json" }
             : {}),
           ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
