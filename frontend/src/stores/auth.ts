@@ -34,6 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function register(payload: RegisterPayload) {
+    console.log("注册请求载荷:", payload);
     loading.value = true;
     try {
       return await apiClient.register(payload);

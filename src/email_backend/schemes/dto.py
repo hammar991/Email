@@ -5,6 +5,7 @@
 from pydantic import BaseModel, EmailStr, model_validator
 from fastapi.responses import JSONResponse
 from typing import Optional
+from datetime import datetime
 
 
 class RegisterMsg(BaseModel):
@@ -96,6 +97,7 @@ class MessageResponse(BaseModel):
     headline: str
     context: str
     box_id: int
+    created_at: datetime
 
 
 class PublicMessageCreate(BaseModel):

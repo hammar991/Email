@@ -2,7 +2,7 @@
   <div class="page-shell public-page">
     <header class="hero compact">
       <div>
-        <p class="eyebrow">Public Drop</p>
+        <p class="eyebrow">Quiet Inbox</p>
         <h1>匿名投递入口</h1>
         <p class="hero-copy">任何拿到分享令牌的人都可以通过这里提交信件，不需要登录。</p>
       </div>

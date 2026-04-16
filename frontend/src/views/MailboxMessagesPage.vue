@@ -2,14 +2,14 @@
   <div class="page-shell">
     <header class="hero compact">
       <div>
-        <p class="eyebrow">Mailbox Messages</p>
+        <p class="eyebrow">Quiet Inbox</p>
         <h1>{{ mailboxHeading }}</h1>
         <p class="hero-copy">
           这个页面由 DashboardPage.vue 跳转进入。列表中一个 card 包含一份信件，并支持分页浏览。
         </p>
       </div>
       <n-space>
-        <n-button secondary type="primary" @click="goBack">返回 Dashboard</n-button>
+        <n-button secondary type="primary" @click="goBack">返回 Quiet Inbox</n-button>
         <n-button tertiary type="info" @click="refreshMessages">刷新信件</n-button>
       </n-space>
     </header>

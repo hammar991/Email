@@ -121,23 +121,27 @@ export const apiClient = {
       body: formData,
     });
   },
+  
   register(payload: RegisterPayload) {
     return request<RegisterResponse>("/register", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
+
   resetPassword(payload: ResetPasswordPayload) {
     return request<{ status: number; detail: string }>("/login/reset", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
+
   getUserInfo(token: string) {
     return request<UserInfo>("/user/userinfo", {
       token,
     });
   },
+
   updateUser(token: string, payload: UpdateUserPayload) {
     return request<UserInfo>("/user/userinfo", {
       method: "PUT",
@@ -145,11 +149,13 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
+
   getMailboxes(token: string) {
     return request<MailboxInfo[]>("/box/mailbox", {
       token,
     });
   },
+
   createMailbox(token: string, payload: MailboxPayload) {
     return request<MailboxInfo>("/box/mailbox", {
       method: "POST",
@@ -157,6 +163,7 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
+
   deleteMailbox(token: string, boxId: number) {
     return request<MailboxInfo>("/box/mailbox", {
       method: "DELETE",
@@ -166,9 +173,11 @@ export const apiClient = {
       },
     });
   },
+
   getMailboxByShareToken(shareToken: string) {
     return request<MailboxInfo>(`/box/share_mailbox/${shareToken}`);
   },
+
   getMessages(token: string, boxId: number) {
     return request<MessageInfo[]>("/message/mail", {
       token,
@@ -177,6 +186,7 @@ export const apiClient = {
       },
     });
   },
+  
   createMessage(token: string, payload: MessagePayload) {
     return request<MessageInfo>("/message/mail", {
       method: "POST",
@@ -184,6 +194,7 @@ export const apiClient = {
       body: JSON.stringify(payload),
     });
   },
+
   deleteMessage(token: string, messageId: number, boxId: number) {
     return request<MessageInfo>("/message/mail", {
       method: "DELETE",
@@ -194,6 +205,7 @@ export const apiClient = {
       },
     });
   },
+  
   submitPublicMessage(shareToken: string, payload: PublicMessagePayload) {
     return request<MessageInfo>(`/message/public/mailbox/${shareToken}/message`, {
       method: "POST",

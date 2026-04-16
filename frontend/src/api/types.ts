@@ -55,6 +55,7 @@ export interface MessageInfo {
   headline: string;
   context: string | null;
   box_id: number;
+  created_at: string;
 }
 
 export interface PublicMessagePayload {

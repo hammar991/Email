@@ -2,18 +2,17 @@
   <div class="auth-shell">
     <div class="auth-layout">
       <section class="auth-copy">
-        <p class="eyebrow">Mailbox Access</p>
-        <h1>登录或注册后进入邮箱控制台</h1>
+        <p class="eyebrow">Quiet Inbox</p>
+        <h1>登录或注册后进入 Quiet Inbox</h1>
         <p class="hero-copy">
-          使用 Vue 3、Vite 与 Naive UI 构建认证入口，右侧保留简洁清晰的登录卡片，并补充找回密码弹窗流程。
+          使用 Vue 3、Vite 与 Naive UI 。
         </p>
       </section>
 
       <n-card class="glass-card auth-card" :bordered="false" content-style="padding: 0;">
         <div class="auth-card-inner">
           <div class="auth-card-header">
-            <h2>欢迎登陆信箱系统!</h2>
-            <p>字段与后端 DTO 保持一致，登录成功后自动进入 Dashboard。</p>
+            <h2>欢迎来到 Quiet Inbox</h2>
           </div>
 
           <n-tabs v-model:value="authMode" class="auth-card-tabs" type="segment" animated>

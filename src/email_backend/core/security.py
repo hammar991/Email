@@ -58,6 +58,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session:Sess
             raise CredentialResponse
         user_service = UserServices(session)
         user = user_service.get_user_by_name(username)
+        logger.debug(f"user:{user.id}")
         return user
     except jose.JWTError:
         raise CredentialResponse
