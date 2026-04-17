@@ -628,7 +628,16 @@ textarea {
   line-height: 1.7;
 }
 
+.analytics-toolbar-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
 .analytics-toolbar-meta {
+  max-width: 320px;
+  text-align: right;
   color: #8a94a6;
   font-size: 12px;
   line-height: 1.6;
@@ -637,6 +646,10 @@ textarea {
 .analytics-toolbar-controls {
   justify-content: flex-end;
   flex-wrap: wrap;
+}
+
+.analytics-mode-button {
+  min-width: 78px;
 }
 
 .analytics-chart-shell {
@@ -655,6 +668,10 @@ textarea {
 .analytics-chart {
   width: 100%;
   height: 360px;
+}
+
+.analytics-canvas {
+  display: block;
 }
 
 .analytics-table {
@@ -961,6 +978,15 @@ textarea {
   .analytics-toolbar {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .analytics-toolbar-side {
+    align-items: flex-start;
+  }
+
+  .analytics-toolbar-meta {
+    max-width: none;
+    text-align: left;
   }
 
   .analytics-toolbar-controls {

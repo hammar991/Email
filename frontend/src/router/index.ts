@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DashboardPage from "@/views/DashboardPage.vue";
 import LoginPage from "@/views/LoginPage.vue";
+import MailboxPage from "@/views/MailboxPage.vue";
 import MailboxMessagesPage from "@/views/MailboxMessagesPage.vue";
+import MessagesPage from "@/views/MessagesPage.vue";
 import PublicDeliveryPage from "@/views/PublicDeliveryPage.vue";
+import SettingsPage from "@/views/SettingsPage.vue";
 
 const TOKEN_STORAGE_KEY = "email-access-token";
 
@@ -25,6 +28,30 @@ const router = createRouter({
       path: "/dashboard",
       name: "dashboard",
       component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/mailboxes",
+      name: "mailboxes",
+      component: MailboxPage,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/messages",
+      name: "messages",
+      component: MessagesPage,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: SettingsPage,
       meta: {
         requiresAuth: true,
       },

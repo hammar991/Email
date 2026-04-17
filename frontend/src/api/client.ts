@@ -160,6 +160,12 @@ export const apiClient = {
     });
   },
 
+  getMailboxByName(token: string, boxName: string) {
+    return request<MailboxInfo | null>(`/box/mailbox/${encodeURIComponent(boxName)}`, {
+      token,
+    });
+  },
+
   createMailbox(token: string, payload: MailboxPayload) {
     return request<MailboxInfo>("/box/mailbox", {
       method: "POST",

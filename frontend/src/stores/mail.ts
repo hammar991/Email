@@ -49,6 +49,20 @@ export const useMailStore = defineStore("mail", () => {
     }
   }
 
+  async function fetchMailboxByName(boxName: string) {
+    loadingMailboxes.value = true;
+    try {
+      const token = requireToken();
+      const mailbox = await apiClient.getMailboxByName(token, boxName);
+      if (mailbox) {
+        selectedMailboxId.value = mailbox.id;
+      }
+      return mailbox;
+    } finally {
+      loadingMailboxes.value = false;
+    }
+  }
+
   async function createMailbox(payload: MailboxPayload) {
     const token = requireToken();
     const mailbox = await apiClient.createMailbox(token, payload);
@@ -125,6 +139,7 @@ export const useMailStore = defineStore("mail", () => {
     loadingMessages,
     publicMailbox,
     fetchMailboxes,
+    fetchMailboxByName,
     createMailbox,
     deleteMailbox,
     fetchMessages,
